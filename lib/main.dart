@@ -20,6 +20,7 @@ import 'package:smart_trash_mobile/presentation/screens/user_setting.dart';
 import 'package:smart_trash_mobile/routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_trash_mobile/utils/middlewares/token_middleware.dart';
+import 'package:smart_trash_mobile/utils/services/notification_service.dart';
 import 'package:smart_trash_mobile/utils/storage/shared_preferences.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -52,9 +53,9 @@ void main() async {
           messagingSenderId: "444507236833",
           projectId: "belajar-4c0e4"));
 
-  await FirebaseMessagingService().initNotifications();
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  FirebaseMessaging.onMessage.listen(_firebaseMessagingForegroundHandler);
+  // await FirebaseMessagingService().initNotifications();
+  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  // FirebaseMessaging.onMessage.listen(_firebaseMessagingForegroundHandler);
 
   await dotenv.load();
 
@@ -85,6 +86,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  NotificationServices notificationServices = NotificationServices();
+
   void _handleMessage(RemoteMessage message) {
     print("data: $message.data");
     if (message.data["type"] == 'monitoring_full') {
@@ -100,6 +103,15 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     NotificationApi.initialize();
     FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+    notificationServices.requestNotificationPermission();
+    notificationServices.forgroundMessage();
+    notificationServices.firebaseInit(context);
+    notificationServices.setupInteractMessage(context);
+    notificationServices.isTokenRefresh();
+
+    notificationServices.getDeviceToken().then((value) {
+      print(value);
+    });
   }
 
   @override
