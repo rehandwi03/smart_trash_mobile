@@ -1,0 +1,126 @@
+{
+  "project_info": {
+    "project_number": "444507236833",
+    "project_id": "belajar-4c0e4",
+    "storage_bucket": "belajar-4c0e4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:444507236833:android:6a409558a8daec741b8aa0",
+        "android_client_info": {
+          "package_name": "com.example.flutter_fcm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "444507236833-17bf4m67lka6rj7tkt95letg1q90vq62.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOteaThHTmk2mgBD9kuxDiIMB93O4vlZI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "444507236833-17bf4m67lka6rj7tkt95letg1q90vq62.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "444507236833-bp02ah0k1d3b7p7s2nv0pgsfhpsakq33.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.cocoapods.camera"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:444507236833:android:1a54a3cc0192b0011b8aa0",
+        "android_client_info": {
+          "package_name": "com.example.flutter_otp_firebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "444507236833-17bf4m67lka6rj7tkt95letg1q90vq62.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOteaThHTmk2mgBD9kuxDiIMB93O4vlZI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "444507236833-17bf4m67lka6rj7tkt95letg1q90vq62.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "444507236833-bp02ah0k1d3b7p7s2nv0pgsfhpsakq33.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.cocoapods.camera"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:444507236833:android:ba48fc519d1c7a421b8aa0",
+        "android_client_info": {
+          "package_name": "com.example.smart_trash_mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "444507236833-pcrstodtap92g9ja9uto6m8tfk5j15ls.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.smart_trash_mobile",
+            "certificate_hash": "df6047200977ad6344c97de3e99e98b8227f0bf5"
+          }
+        },
+        {
+          "client_id": "444507236833-17bf4m67lka6rj7tkt95letg1q90vq62.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOteaThHTmk2mgBD9kuxDiIMB93O4vlZI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "444507236833-17bf4m67lka6rj7tkt95letg1q90vq62.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "444507236833-bp02ah0k1d3b7p7s2nv0pgsfhpsakq33.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.cocoapods.camera"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
