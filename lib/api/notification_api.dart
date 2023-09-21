@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:smart_trash_mobile/main.dart';
+import 'package:smart_trash_mobile/presentation/screens/garbage_monitor.dart';
 import 'package:smart_trash_mobile/routes.dart';
 
 class NotificationApi {
@@ -24,9 +25,32 @@ class NotificationApi {
 
   static void _onDidReceiveNotificationResponse(NotificationResponse details) {
     print(details.payload);
-    if (details.payload == "monitoring_almost_full") {
-      Navigator.pushNamed(appContext!, Routes.garbageMonitor);
+    // if (details.payload == "monitoring_almost_full") {
+    //   Navigator.pushNamed(appContext!, Routes.garbageMonitor);
+    // }
+  }
+
+  Future<void> _firebaseMessagingForegroundHandler(
+      RemoteMessage message) async {
+    print("Title dari init: ${message.notification?.title}");
+    print("Body dari init: ${message.notification?.body}");
+    print("Payload dari init: ${message.data}");
+
+    if (message.notification != null) {
+      print("hahaha");
+      NotificationApi.display(message);
     }
+  }
+
+  void firebaseInit(BuildContext context) {
+    // FirebaseMessaging.onMessage.listen(_firebaseMessagingForegroundHandler);
+    FirebaseMessaging.onMessage.listen((message) {
+      print("Title dari init: ${message.notification?.title}");
+      print("Body dari init: ${message.notification?.body}");
+      print("Payload dari init: ${message.data}");
+      initLocalNotifications(context, message);
+      NotificationApi.display(message);
+    });
   }
 
   static void initialize() {
@@ -56,6 +80,34 @@ class NotificationApi {
         body,
         await _notificationDetails(),
       );
+
+  void initLocalNotifications(
+      BuildContext context, RemoteMessage message) async {
+    var androidInitializationSettings =
+        const AndroidInitializationSettings('@mipmap/ic_launcher');
+    var iosInitializationSettings = const DarwinInitializationSettings();
+
+    var initializationSetting = InitializationSettings(
+        android: androidInitializationSettings, iOS: iosInitializationSettings);
+
+    await _notifications.initialize(initializationSetting,
+        onDidReceiveNotificationResponse: (payload) {
+      // handle interaction when app is active for android
+      handleMessage(context, message);
+    });
+  }
+
+  void handleMessage(BuildContext context, RemoteMessage message) {
+    if (message.data['type'] == 'monitoring_full') {
+      print("uhuy");
+      // Navigator.pushNamed(context, Routes.userSetting);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => GarbageMonitorScreen(),
+          ));
+    }
+  }
 
   static Future<void> display(RemoteMessage message) async {
     print(message.data);

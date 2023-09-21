@@ -41,8 +41,6 @@ Future<void> _firebaseMessagingForegroundHandler(RemoteMessage message) async {
   }
 }
 
-BuildContext? appContext;
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -54,7 +52,6 @@ void main() async {
 
   await FirebaseMessagingService().initNotifications();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  FirebaseMessaging.onMessage.listen(_firebaseMessagingForegroundHandler);
 
   await dotenv.load();
 
@@ -100,10 +97,15 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     NotificationApi.initialize();
     FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+    // FirebaseMessaging.onMessage.listen(_firebaseMessagingForegroundHandler);
   }
 
   @override
   Widget build(BuildContext context) {
+    NotificationApi notif = NotificationApi();
+
+    notif.firebaseInit(context);
+
     final Map<String, WidgetBuilder> protectedRoutes = {
       Routes.home: (context) => const HomeScreen(),
       Routes.userSetting: (context) => const UserSettingScreen(),
@@ -111,8 +113,6 @@ class _MyAppState extends State<MyApp> {
       Routes.report: (context) => const ReportScreen(),
       Routes.garbageMonitorDetail: (context) => GarbageMonitorDetail(),
     };
-
-    appContext = context;
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
