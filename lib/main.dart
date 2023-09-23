@@ -10,7 +10,6 @@ import 'package:smart_trash_mobile/data/bloc/websocket/websocket_bloc.dart';
 import 'package:smart_trash_mobile/data/repositories/login_repository.dart';
 import 'package:smart_trash_mobile/data/repositories/trash_repository.dart';
 import 'package:smart_trash_mobile/data/repositories/user_repository.dart';
-import 'package:smart_trash_mobile/firebase_messaging.dart';
 import 'package:smart_trash_mobile/presentation/screens/garbage_monitor.dart';
 import 'package:smart_trash_mobile/presentation/screens/garbage_monitor_detail.dart';
 import 'package:smart_trash_mobile/presentation/screens/home.dart';
@@ -23,12 +22,9 @@ import 'package:smart_trash_mobile/utils/middlewares/token_middleware.dart';
 import 'package:smart_trash_mobile/utils/services/notification_service.dart';
 import 'package:smart_trash_mobile/utils/storage/shared_preferences.dart';
 
+@pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // Handle the background message
-  print("message");
-  print("Title: ${message.notification?.title}");
-  print("Body: ${message.notification?.body}");
-  print("Payload: ${message.data}");
+  await Firebase.initializeApp();
 }
 
 Future<void> _firebaseMessagingForegroundHandler(RemoteMessage message) async {
@@ -42,8 +38,6 @@ Future<void> _firebaseMessagingForegroundHandler(RemoteMessage message) async {
   }
 }
 
-BuildContext? appContext;
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -52,6 +46,9 @@ void main() async {
           appId: "1:444507236833:ios:e22a2387762e33c41b8aa0",
           messagingSenderId: "444507236833",
           projectId: "belajar-4c0e4"));
+
+  FirebaseMessaging.onMessageOpenedApp
+      .listen(_firebaseMessagingBackgroundHandler);
 
   // await FirebaseMessagingService().initNotifications();
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -75,7 +72,7 @@ void main() async {
     BlocProvider(
       create: (context) => TrashBloc(TrashRepository()),
     )
-  ], child: MyApp()));
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -102,16 +99,15 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     NotificationApi.initialize();
-    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
-    notificationServices.requestNotificationPermission();
-    notificationServices.forgroundMessage();
-    notificationServices.firebaseInit(context);
-    notificationServices.setupInteractMessage(context);
-    notificationServices.isTokenRefresh();
+    // notificationServices.requestNotificationPermission();
+    // notificationServices.forgroundMessage();
+    // notificationServices.firebaseInit(context);
+    // notificationServices.setupInteractMessage(context);
+    // notificationServices.isTokenRefresh();
 
-    notificationServices.getDeviceToken().then((value) {
-      print(value);
-    });
+    // notificationServices.getDeviceToken().then((value) {
+    //   print(value);
+    // });
   }
 
   @override
@@ -124,11 +120,10 @@ class _MyAppState extends State<MyApp> {
       Routes.garbageMonitorDetail: (context) => GarbageMonitorDetail(),
     };
 
-    appContext = context;
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: Routes.home,
+      routes: protectedRoutes,
       onGenerateRoute: (setting) {
         if (protectedRoutes.containsKey(setting.name) &&
             checkTokenMiddleware()) {

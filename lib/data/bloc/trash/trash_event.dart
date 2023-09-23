@@ -7,6 +7,8 @@ sealed class TrashEvent extends Equatable {
   List<Object> get props => [];
 }
 
+final class GetReportPerDay extends TrashEvent {}
+
 final class UnlockTrashEvent extends TrashEvent {
   @override
   List<Object> get props => [];

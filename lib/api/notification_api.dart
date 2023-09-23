@@ -9,7 +9,7 @@ class NotificationApi {
       FlutterLocalNotificationsPlugin();
 
   static Future _notificationDetails() async {
-    return NotificationDetails(
+    return const NotificationDetails(
       android: AndroidNotificationDetails('channel id', 'channel name',
           channelDescription: 'channel description',
           importance: Importance.max),
@@ -23,10 +23,10 @@ class NotificationApi {
   }
 
   static void _onDidReceiveNotificationResponse(NotificationResponse details) {
-    print(details.payload);
-    if (details.payload == "monitoring_almost_full") {
-      Navigator.pushNamed(appContext!, Routes.garbageMonitor);
-    }
+    // print(details.payload);
+    // if (details.payload == "monitoring_almost_full") {
+    //   Navigator.pushNamed(context, Routes.garbageMonitor);
+    // }
   }
 
   static void initialize() {

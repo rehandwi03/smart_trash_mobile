@@ -1,3 +1,13 @@
+class ReportPerDay {
+  int data;
+
+  ReportPerDay({required this.data});
+
+  factory ReportPerDay.fromJson(Map<String, dynamic> json) {
+    return ReportPerDay(data: json["data"]);
+  }
+}
+
 class TrashHistory {
   int id;
   String trash;

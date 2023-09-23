@@ -4,6 +4,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:smart_trash_mobile/presentation/screens/report.dart';
+import 'package:smart_trash_mobile/routes.dart';
 
 class NotificationServices {
   //initialising firebase message plugin
@@ -84,12 +86,13 @@ class NotificationServices {
   // function to show visible notification when app is active
   Future<void> showNotification(RemoteMessage message) async {
     AndroidNotificationChannel channel = AndroidNotificationChannel(
-        message.notification!.android!.channelId.toString(),
-        message.notification!.android!.channelId.toString(),
-        importance: Importance.max,
-        showBadge: true,
-        playSound: true,
-        sound: const RawResourceAndroidNotificationSound('jetsons_doorbell'));
+      message.notification!.android!.channelId.toString(),
+      message.notification!.android!.channelId.toString(),
+      importance: Importance.max,
+      showBadge: true,
+      playSound: true,
+      // sound: const RawResourceAndroidNotificationSound('jetsons_doorbell')
+    );
 
     AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
@@ -153,12 +156,9 @@ class NotificationServices {
   }
 
   void handleMessage(BuildContext context, RemoteMessage message) {
-    // if(message.data['type'] =='msj'){
-    //   Navigator.push(context,
-    //       MaterialPageRoute(builder: (context) => MessageScreen(
-    //         id: message.data['id'] ,
-    //       )));
-    // }
+    if (message.data['type'] == 'msj') {
+      Navigator.pushNamed(context, Routes.garbageMonitor);
+    }
   }
 
   Future forgroundMessage() async {

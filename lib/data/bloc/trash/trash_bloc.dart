@@ -8,7 +8,19 @@ part 'trash_state.dart';
 
 class TrashBloc extends Bloc<TrashEvent, TrashState> {
   TrashRepository _trashRepository;
+  int? totalReportPerDay;
   TrashBloc(this._trashRepository) : super(GetTrashHistoryLoadingState()) {
+    on<GetReportPerDay>((event, emit) async {
+      emit(TrashReportPerDayLoadingState());
+      try {
+        final response = await _trashRepository.getReportPerDay();
+        totalReportPerDay = response.data;
+        emit(TrashReportPerDaySuccessState(response: response));
+      } catch (e) {
+        emit(TrashReportPerDayFailedState(message: e.toString()));
+      }
+    });
+
     on<GetTrashHistoryEvent>((event, emit) async {
       emit(UnlockTrashLoadingState());
       try {
