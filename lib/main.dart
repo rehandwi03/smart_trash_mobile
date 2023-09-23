@@ -10,7 +10,6 @@ import 'package:smart_trash_mobile/data/bloc/websocket/websocket_bloc.dart';
 import 'package:smart_trash_mobile/data/repositories/login_repository.dart';
 import 'package:smart_trash_mobile/data/repositories/trash_repository.dart';
 import 'package:smart_trash_mobile/data/repositories/user_repository.dart';
-import 'package:smart_trash_mobile/firebase_messaging.dart';
 import 'package:smart_trash_mobile/presentation/screens/garbage_monitor.dart';
 import 'package:smart_trash_mobile/presentation/screens/garbage_monitor_detail.dart';
 import 'package:smart_trash_mobile/presentation/screens/home.dart';
@@ -20,14 +19,12 @@ import 'package:smart_trash_mobile/presentation/screens/user_setting.dart';
 import 'package:smart_trash_mobile/routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_trash_mobile/utils/middlewares/token_middleware.dart';
+import 'package:smart_trash_mobile/utils/services/notification_service.dart';
 import 'package:smart_trash_mobile/utils/storage/shared_preferences.dart';
 
+@pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // Handle the background message
-  print("message");
-  print("Title: ${message.notification?.title}");
-  print("Body: ${message.notification?.body}");
-  print("Payload: ${message.data}");
+  await Firebase.initializeApp();
 }
 
 Future<void> _firebaseMessagingForegroundHandler(RemoteMessage message) async {
@@ -50,8 +47,12 @@ void main() async {
           messagingSenderId: "444507236833",
           projectId: "belajar-4c0e4"));
 
-  await FirebaseMessagingService().initNotifications();
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  FirebaseMessaging.onMessageOpenedApp
+      .listen(_firebaseMessagingBackgroundHandler);
+
+  // await FirebaseMessagingService().initNotifications();
+  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  // FirebaseMessaging.onMessage.listen(_firebaseMessagingForegroundHandler);
 
   await dotenv.load();
 
@@ -71,7 +72,7 @@ void main() async {
     BlocProvider(
       create: (context) => TrashBloc(TrashRepository()),
     )
-  ], child: MyApp()));
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -82,6 +83,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  NotificationServices notificationServices = NotificationServices();
+
   void _handleMessage(RemoteMessage message) {
     print("data: $message.data");
     if (message.data["type"] == 'monitoring_full') {
@@ -117,6 +120,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: Routes.home,
+      routes: protectedRoutes,
       onGenerateRoute: (setting) {
         if (protectedRoutes.containsKey(setting.name) &&
             checkTokenMiddleware()) {

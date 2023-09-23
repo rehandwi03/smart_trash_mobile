@@ -1,11 +1,45 @@
 import 'package:dio/dio.dart';
 import 'package:smart_trash_mobile/data/models/trash.dart';
 import 'package:smart_trash_mobile/utils/network/dio.dart';
+import 'package:smart_trash_mobile/utils/storage/shared_preferences.dart';
 
 class TrashRepository {
+  SharedPreferencesService p = SharedPreferencesService();
+
+  Future<ReportPerDay> getReportPerDay() async {
+    try {
+      final String? accessToken = p.prefs.getString("access_token");
+      final client = DioClient().client;
+
+      if (accessToken != null) {
+        client.options.headers["Authorization"] = "Bearer $accessToken";
+      }
+      final response = await client.get("/api/trash/history/day");
+
+      return ReportPerDay(data: response.data["data"] as int);
+    } on DioException catch (e) {
+      print(e.response?.data);
+      print(e.response?.statusCode);
+      if (e.response?.statusCode != 200) {
+        throw "Something wrong";
+      }
+    } catch (e) {
+      print(e);
+    }
+
+    throw "Unexpected error";
+  }
+
   Future<List<TrashHistory>> getHistories() async {
     try {
-      final response = await DioClient().client.get("/api/trash/history");
+      final String? accessToken = p.prefs.getString("access_token");
+      final client = DioClient().client;
+
+      if (accessToken != null) {
+        client.options.headers["Authorization"] = "Bearer $accessToken";
+      }
+
+      final response = await client.get("/api/trash/history");
 
       List<dynamic> listData = response.data["data"];
 
@@ -28,7 +62,14 @@ class TrashRepository {
 
   Future<void> lockTrash() async {
     try {
-      final response = DioClient().client.post('/trash/lock');
+      final String? accessToken = p.prefs.getString("access_token");
+      final client = DioClient().client;
+
+      if (accessToken != null) {
+        client.options.headers["Authorization"] = "Bearer $accessToken";
+      }
+
+      final response = client.post('/trash/lock');
     } on DioException catch (e) {
       if (e.response?.statusCode != 200) {
         throw 'Something Wrong';
@@ -40,7 +81,14 @@ class TrashRepository {
 
   Future<void> unlockTrash() async {
     try {
-      final response = DioClient().client.post('/trash/unlock');
+      final String? accessToken = p.prefs.getString("access_token");
+      final client = DioClient().client;
+
+      if (accessToken != null) {
+        client.options.headers["Authorization"] = "Bearer $accessToken";
+      }
+
+      final response = client.post('/trash/unlock');
     } on DioException catch (e) {
       if (e.response?.statusCode != 200) {
         throw 'Something Wrong';

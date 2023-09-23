@@ -3,11 +3,21 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:smart_trash_mobile/data/models/user.dart';
 import 'package:smart_trash_mobile/utils/network/dio.dart';
+import 'package:smart_trash_mobile/utils/storage/shared_preferences.dart';
 
 class UserRepository {
+  SharedPreferencesService p = SharedPreferencesService();
+
   Future<List<UserResponse>> getAllUser() async {
     try {
-      final response = await DioClient().client.get("/api/users");
+      final String? accessToken = p.prefs.getString("access_token");
+      final client = DioClient().client;
+
+      if (accessToken != null) {
+        client.options.headers["Authorization"] = "Bearer $accessToken";
+      }
+
+      final response = await client.get("/api/users");
 
       List<dynamic> listData = response.data["data"];
 
@@ -28,8 +38,14 @@ class UserRepository {
 
   addUser(UserAddRequest req) async {
     try {
-      final response =
-          await DioClient().client.post("/api/users", data: req.toJson());
+      final String? accessToken = p.prefs.getString("access_token");
+      final client = DioClient().client;
+
+      if (accessToken != null) {
+        client.options.headers["Authorization"] = "Bearer $accessToken";
+      }
+
+      final response = await client.post("/api/users", data: req.toJson());
 
       return;
     } on DioException catch (e) {
@@ -43,8 +59,14 @@ class UserRepository {
 
   deleteUser(UserDeleteRequest req) async {
     try {
-      final response =
-          await DioClient().client.delete("/api/users", data: req.toJson());
+      final String? accessToken = p.prefs.getString("access_token");
+      final client = DioClient().client;
+
+      if (accessToken != null) {
+        client.options.headers["Authorization"] = "Bearer $accessToken";
+      }
+
+      final response = await client.delete("/api/users", data: req.toJson());
 
       return;
     } on DioException catch (e) {

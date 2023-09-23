@@ -30,7 +30,12 @@ class _ReportScreenState extends State<ReportScreen> {
               state.response.forEach((e) {
                 DataRow r = DataRow(cells: [
                   DataCell(Text(e.cleanedAt)),
-                  DataCell(Text(e.trash)),
+                  DataCell(Container(
+                    child: Text(
+                      e.trash,
+                      maxLines: 4,
+                    ),
+                  )),
                   DataCell(Text(e.cleanedBy))
                 ]);
 
@@ -51,6 +56,9 @@ class _ReportScreenState extends State<ReportScreen> {
 
   Widget buildTable(BuildContext context, List<DataRow> rows) {
     return DataTable(
+        columnSpacing: 20,
+        dataRowMinHeight: 10,
+        dataRowMaxHeight: 50,
         border: TableBorder(
             borderRadius: BorderRadius.circular(
               10,

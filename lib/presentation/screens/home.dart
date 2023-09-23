@@ -1,11 +1,11 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smart_trash_mobile/data/bloc/trash/trash_bloc.dart';
 import 'package:smart_trash_mobile/data/bloc/user/user_bloc.dart';
 import 'package:smart_trash_mobile/data/models/card.dart';
-import 'package:smart_trash_mobile/data/models/user.dart';
 import 'package:smart_trash_mobile/presentation/widgets/card.dart';
 import 'package:smart_trash_mobile/routes.dart';
+import 'package:smart_trash_mobile/utils/services/notification_service.dart';
 import 'package:smart_trash_mobile/utils/storage/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,33 +16,38 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  NotificationServices notificationServices = NotificationServices();
   @override
   void initState() {
     super.initState();
     context.read<UserBloc>().add(UserGetEvent());
+    context.read<TrashBloc>().add(GetReportPerDay());
+    notificationServices.requestNotificationPermission();
+    notificationServices.forgroundMessage();
+    notificationServices.firebaseInit(context);
+    notificationServices.setupInteractMessage(context);
+    notificationServices.isTokenRefresh();
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<CardData> cardData = [
-      CardData(Icons.person, Colors.lightBlueAccent, 'Pengaturan Pengguna',
-          'Jumlah Pengguna', '0', Routes.userSetting),
-      CardData(Icons.delete_rounded, Colors.blueGrey, 'Monitoring Sampah',
-          'Jumlah Tempat', '0', Routes.garbageMonitor),
-      CardData(Icons.analytics, Colors.greenAccent, 'Laporan',
-          'Pengangkatan Sampah Per-Hari', '0', Routes.report)
-    ];
-
+    final reportPerDay =
+        context.select((TrashBloc bloc) => bloc.totalReportPerDay);
     CardData userCard = CardData(Icons.person, Colors.lightBlueAccent,
         'Pengaturan Pengguna', 'Jumlah Pengguna', '0', Routes.userSetting);
     CardData garbageCard = CardData(Icons.delete_rounded, Colors.blueGrey,
-        'Monitoring Sampah', 'Jumlah Tempat', '0', Routes.garbageMonitor);
-    CardData reportCard = CardData(Icons.analytics, Colors.greenAccent,
-        'Laporan', 'Pengangkatan Sampah Per-Hari', '0', Routes.report);
+        'Monitoring Sampah', 'Jumlah Tempat', '1', Routes.garbageMonitor);
+    CardData reportCard = CardData(
+        Icons.analytics,
+        Colors.greenAccent,
+        'Laporan',
+        'Pengangkatan Sampah Per-Hari',
+        reportPerDay?.toString() ?? '0',
+        Routes.report);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Halaman Utama"),
+        title: const Text("Halaman Utama"),
         actions: <Widget>[
           PopupMenuButton(
             onSelected: (value) async {
@@ -52,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.pushReplacementNamed(context, Routes.login);
               }
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.person,
               color: Colors.white,
             ),
@@ -68,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: BlocBuilder<UserBloc, UserState>(
         builder: (context, state) {
           if (state is UserGetLoading) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
@@ -87,12 +92,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: Center(
         child: Container(
-            padding: EdgeInsets.all(10),
-            margin: EdgeInsets.only(left: 10, right: 10),
+            padding: const EdgeInsets.all(10),
+            margin: const EdgeInsets.only(left: 10, right: 10),
             child: Container(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
-                margin: EdgeInsets.only(top: 20),
+                margin: const EdgeInsets.only(top: 20),
                 child: ListView(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
@@ -108,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget showCard(CardData cardData) {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: GestureDetector(
         onTap: () {
           Navigator.of(context).pushNamed(cardData.route);
