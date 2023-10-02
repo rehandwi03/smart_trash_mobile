@@ -123,7 +123,7 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: Routes.login,
+      initialRoute: Routes.home,
       routes: protectedRoutes,
       onGenerateRoute: (setting) {
         if (protectedRoutes.containsKey(setting.name) &&

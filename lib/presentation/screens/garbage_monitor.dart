@@ -7,6 +7,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:smart_trash_mobile/data/bloc/trash/trash_bloc.dart';
 import 'package:smart_trash_mobile/data/models/trash.dart';
 import 'package:smart_trash_mobile/routes.dart';
+import 'package:smart_trash_mobile/utils/network/mqtt.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class GarbageMonitorScreen extends StatefulWidget {
@@ -21,12 +22,15 @@ class _GarbageMonitorScreenState extends State<GarbageMonitorScreen> {
   void initState() {
     super.initState();
     context.read<TrashBloc>().add(GetAllTrashEvent());
+    mqttHandler.connect("topic/ultrasonic/in");
   }
 
   @override
   void dispose() {
     super.dispose();
   }
+
+  MqttHandler mqttHandler = MqttHandler();
 
   @override
   Widget build(BuildContext context) {
@@ -122,6 +126,20 @@ class _GarbageMonitorScreenState extends State<GarbageMonitorScreen> {
                         data.name,
                         style: const TextStyle(
                             fontSize: 15, fontWeight: FontWeight.w500),
+                      ),
+                      ValueListenableBuilder<int>(
+                        valueListenable: mqttHandler.data,
+                        builder: (context, value, child) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Text('$value',
+                                  style: const TextStyle(
+                                      color: Colors.deepPurpleAccent,
+                                      fontSize: 35))
+                            ],
+                          );
+                        },
                       ),
                       StreamBuilder(
                         stream: channel.stream.asBroadcastStream(),
