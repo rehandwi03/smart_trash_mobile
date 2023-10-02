@@ -9,7 +9,18 @@ part 'trash_state.dart';
 class TrashBloc extends Bloc<TrashEvent, TrashState> {
   TrashRepository _trashRepository;
   int? totalReportPerDay;
-  TrashBloc(this._trashRepository) : super(GetTrashHistoryLoadingState()) {
+  List<TrashHistory> histories = [];
+  TrashBloc(this._trashRepository) : super(TrashInitial()) {
+    on<GetAllTrashEvent>((event, emit) async {
+      emit(GetAllTrashLoadingState());
+      try {
+        final response = await _trashRepository.getAllTrash();
+        emit(GetAllTrashSuccessState(response: response));
+      } catch (e) {
+        emit(GetAllTrashFailedState(message: e.toString()));
+      }
+    });
+
     on<GetReportPerDay>((event, emit) async {
       emit(TrashReportPerDayLoadingState());
       try {
@@ -18,16 +29,6 @@ class TrashBloc extends Bloc<TrashEvent, TrashState> {
         emit(TrashReportPerDaySuccessState(response: response));
       } catch (e) {
         emit(TrashReportPerDayFailedState(message: e.toString()));
-      }
-    });
-
-    on<GetTrashHistoryEvent>((event, emit) async {
-      emit(UnlockTrashLoadingState());
-      try {
-        final histories = await _trashRepository.getHistories();
-        emit(GetTrashHistorySuccessState(response: histories));
-      } catch (e) {
-        emit(GetTrashHistoryErrorState());
       }
     });
 
@@ -44,7 +45,7 @@ class TrashBloc extends Bloc<TrashEvent, TrashState> {
     on<LockTrashEvent>((event, emit) {
       emit(LockTrashLoadingState());
       try {
-        _trashRepository.unlockTrash();
+        _trashRepository.lockTrash();
         emit(LockTrashSuccessState());
       } catch (e) {
         emit(LockTrashErrorState());

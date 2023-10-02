@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last
 
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,6 +45,23 @@ class _LoginScreenState extends State<LoginScreen> {
             storage.prefs
                 .setString("refresh_token", state.response.refreshToken ?? "");
             Navigator.pushReplacementNamed(context, Routes.home);
+          }
+
+          if (state is LoginErrorState) {
+            final snackBar = SnackBar(
+              elevation: 0,
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.transparent,
+              content: AwesomeSnackbarContent(
+                title: 'Gagal membuat ticket',
+                message: state.message,
+                contentType: ContentType.failure,
+              ),
+            );
+
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(snackBar);
           }
         })));
   }

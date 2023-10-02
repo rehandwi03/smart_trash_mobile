@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smart_trash_mobile/data/bloc/user/user_bloc.dart';
 import 'package:smart_trash_mobile/data/models/user.dart';
 import 'package:smart_trash_mobile/presentation/widgets/input_text.dart';
-import 'package:smart_trash_mobile/routes.dart';
 
 class UserSettingScreen extends StatefulWidget {
   const UserSettingScreen({super.key});
@@ -206,6 +205,40 @@ class _UserSettingScreenState extends State<UserSettingScreen> {
                 ..hideCurrentSnackBar()
                 ..showSnackBar(snackBar);
               context.read<UserBloc>().add(UserGetEvent());
+            }
+
+            if (state is UserDeleteError) {
+              final snackBar = SnackBar(
+                elevation: 0,
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Colors.transparent,
+                content: AwesomeSnackbarContent(
+                  title: 'Gagal menghapus user',
+                  message: state.message,
+                  contentType: ContentType.failure,
+                ),
+              );
+
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(snackBar);
+            }
+
+            if (state is UserAddError) {
+              final snackBar = SnackBar(
+                elevation: 0,
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Colors.transparent,
+                content: AwesomeSnackbarContent(
+                  title: 'Gagal menambahkan user',
+                  message: state.message,
+                  contentType: ContentType.failure,
+                ),
+              );
+
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(snackBar);
             }
           },
         )));

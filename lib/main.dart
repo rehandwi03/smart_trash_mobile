@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:smart_trash_mobile/api/notification_api.dart';
 import 'package:smart_trash_mobile/data/bloc/login/login_bloc.dart';
 import 'package:smart_trash_mobile/data/bloc/trash/trash_bloc.dart';
+import 'package:smart_trash_mobile/data/bloc/trash_history/trash_history_bloc.dart';
 import 'package:smart_trash_mobile/data/bloc/user/user_bloc.dart';
 import 'package:smart_trash_mobile/data/bloc/websocket/websocket_bloc.dart';
 import 'package:smart_trash_mobile/data/repositories/login_repository.dart';
@@ -71,6 +72,9 @@ void main() async {
     ),
     BlocProvider(
       create: (context) => TrashBloc(TrashRepository()),
+    ),
+    BlocProvider(
+      create: (context) => TrashHistoryBloc(TrashRepository()),
     )
   ], child: const MyApp()));
 }
@@ -119,7 +123,7 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: Routes.home,
+      initialRoute: Routes.login,
       routes: protectedRoutes,
       onGenerateRoute: (setting) {
         if (protectedRoutes.containsKey(setting.name) &&

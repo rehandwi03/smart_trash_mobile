@@ -1,3 +1,16 @@
+class TrashResponse {
+  int id;
+  String name;
+  int state;
+
+  TrashResponse({required this.id, required this.name, required this.state});
+
+  factory TrashResponse.fromJson(Map<String, dynamic> json) {
+    return TrashResponse(
+        id: json["id"], name: json["name"], state: json["state"]);
+  }
+}
+
 class ReportPerDay {
   int data;
 

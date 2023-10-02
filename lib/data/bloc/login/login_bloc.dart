@@ -13,14 +13,12 @@ class LoginBloc extends Bloc<LoginBlocEvent, LoginState> {
     on<LoginEvent>(
       (event, emit) async {
         emit(LoginLoadingState());
-        print("Hello");
         try {
           final token = await _loginRepository.login(event.req);
-          print(token);
           emit(LoginSuccessState(token));
         } catch (e) {
           print(e);
-          emit(LoginErrorState());
+          emit(LoginErrorState(message: e.toString()));
         }
       },
     );

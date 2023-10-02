@@ -44,6 +44,7 @@ dependencies:
   overlay_support: ^2.1.0
   percent_indicator: ^4.2.3
   shared_preferences: ^2.2.1
+  syncfusion_flutter_datepicker: ^23.1.36
   web_socket_channel: ^2.4.0
 
 dev_dependencies:

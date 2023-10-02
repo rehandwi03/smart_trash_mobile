@@ -27,11 +27,25 @@ final class UserAddSuccess extends UserState {}
 
 final class UserAddLoading extends UserState {}
 
-final class UserAddError extends UserState {}
+final class UserAddError extends UserState {
+  final String message;
+
+  const UserAddError({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
 
 // delete user
 final class UserDeleteSuccess extends UserState {}
 
 final class UserDeleteLoading extends UserState {}
 
-final class UserDeleteError extends UserState {}
+final class UserDeleteError extends UserState {
+  final String message;
+
+  const UserDeleteError({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}

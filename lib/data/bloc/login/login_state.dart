@@ -15,4 +15,11 @@ final class LoginSuccessState extends LoginState {
   List<Object> get props => [response];
 }
 
-final class LoginErrorState extends LoginState {}
+final class LoginErrorState extends LoginState {
+  final String message;
+
+  LoginErrorState({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}

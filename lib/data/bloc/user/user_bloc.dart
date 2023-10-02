@@ -27,7 +27,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           await this._userRepository.addUser(event.request);
           emit(UserAddSuccess());
         } catch (e) {
-          emit(UserAddError());
+          emit(UserAddError(message: e.toString()));
         }
       },
     );
@@ -39,7 +39,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           await this._userRepository.deleteUser(event.request);
           emit(UserDeleteSuccess());
         } catch (e) {
-          emit(UserDeleteError());
+          emit(UserDeleteError(message: e.toString()));
         }
       },
     );

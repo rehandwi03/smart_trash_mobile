@@ -12,6 +12,26 @@ final class TrashInitial extends TrashState {
   List<Object> get props => [];
 }
 
+final class GetAllTrashLoadingState extends TrashState {}
+
+final class GetAllTrashFailedState extends TrashState {
+  final String message;
+
+  const GetAllTrashFailedState({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
+final class GetAllTrashSuccessState extends TrashState {
+  final List<TrashResponse> response;
+
+  const GetAllTrashSuccessState({required this.response});
+
+  @override
+  List<Object> get props => [response];
+}
+
 final class TrashReportPerDayLoadingState extends TrashState {}
 
 final class TrashReportPerDayFailedState extends TrashState {
@@ -30,25 +50,6 @@ final class TrashReportPerDaySuccessState extends TrashState {
 
   @override
   List<Object> get props => [response];
-}
-
-final class GetTrashHistorySuccessState extends TrashState {
-  final List<TrashHistory> response;
-
-  const GetTrashHistorySuccessState({required this.response});
-
-  @override
-  List<Object> get props => [response];
-}
-
-final class GetTrashHistoryLoadingState extends TrashState {
-  @override
-  List<Object> get props => [];
-}
-
-final class GetTrashHistoryErrorState extends TrashState {
-  @override
-  List<Object> get props => [];
 }
 
 //
